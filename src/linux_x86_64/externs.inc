@@ -1,0 +1,16 @@
+.extern isatty
+.extern strcmp
+.extern strlen
+.extern snprintf
+.extern fopen
+.extern fclose
+.extern fdopen
+.extern fputs
+.extern fputc
+.extern getline
+.extern getenv
+.extern mkdir
+.extern time
+.extern puts
+.extern perror
+.extern free

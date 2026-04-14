@@ -1,0 +1,38 @@
+.section .data
+opt_type:
+    .quad 0
+opt_tag:
+    .quad 0
+opt_cmd:
+    .quad 0
+opt_file:
+    .quad 0
+opt_force_view:
+    .quad 0
+resolved_file_ptr:
+    .quad 0
+current_run_ptr:
+    .quad 0
+
+.section .bss
+    .align 8
+resolved_file:
+    .skip BUF_SIZE
+resolved_dir:
+    .skip BUF_SIZE
+time_buf:
+    .skip 64
+run_id_buf:
+    .skip 64
+seq_buf:
+    .skip 32
+record_fields:
+    .skip 56
+current_run_id:
+    .skip 64
+line_ptr:
+    .skip 8
+line_cap:
+    .skip 8
+
+.text
