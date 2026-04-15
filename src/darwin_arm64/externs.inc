@@ -11,7 +11,16 @@
 .extern _write
 .extern _getenv
 .extern _mkdir
+.extern _pipe
+.extern _fork
+.extern _dup2
+.extern _close
+.extern _execvp
+.extern _waitpid
+.extern _exit
 .extern _time
+.extern _localtime_r
+.extern _strftime
 .extern _puts
 .extern _perror
 .extern _free

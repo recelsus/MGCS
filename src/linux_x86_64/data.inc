@@ -1,5 +1,5 @@
 .section .data
-opt_type:
+opt_source:
     .quad 0
 opt_tag:
     .quad 0
@@ -8,6 +8,12 @@ opt_cmd:
 opt_file:
     .quad 0
 opt_force_view:
+    .quad 0
+opt_run_mode:
+    .quad 0
+run_argv_ptr:
+    .quad 0
+run_argc:
     .quad 0
 resolved_file_ptr:
     .quad 0
@@ -22,6 +28,10 @@ resolved_dir:
     .skip BUF_SIZE
 time_buf:
     .skip 64
+run_time_raw:
+    .skip 8
+tm_buf:
+    .skip 128
 run_id_buf:
     .skip 64
 seq_buf:
@@ -30,6 +40,12 @@ record_fields:
     .skip 56
 current_run_id:
     .skip 64
+run_cmd_buf:
+    .skip BUF_SIZE
+pipe_fds:
+    .skip 8
+child_status:
+    .skip 4
 line_ptr:
     .skip 8
 line_cap:

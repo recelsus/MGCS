@@ -10,7 +10,16 @@
 .extern getline
 .extern getenv
 .extern mkdir
+.extern pipe
+.extern fork
+.extern dup2
+.extern close
+.extern execvp
+.extern waitpid
+.extern exit
 .extern time
+.extern localtime_r
+.extern strftime
 .extern puts
 .extern perror
 .extern free

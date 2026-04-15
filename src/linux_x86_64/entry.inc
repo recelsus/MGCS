@@ -17,6 +17,9 @@ main:
     jmp .Lmain_done
 
 .Lmain_path_ok:
+    mov rax, qword ptr [rip + opt_run_mode]
+    test rax, rax
+    jne .Lmain_run
     mov rax, qword ptr [rip + opt_force_view]
     test rax, rax
     jne .Lmain_view
@@ -30,6 +33,10 @@ main:
     xor eax, eax
     jmp .Lmain_done
 
+.Lmain_run:
+    call run_command
+    jmp .Lmain_done
+
 .Lmain_capture:
     call capture_logs
     xor eax, eax
@@ -39,11 +46,14 @@ main:
     ret
 
 reset_state:
-    mov qword ptr [rip + opt_type], 0
+    mov qword ptr [rip + opt_source], 0
     mov qword ptr [rip + opt_tag], 0
     mov qword ptr [rip + opt_cmd], 0
     mov qword ptr [rip + opt_file], 0
     mov qword ptr [rip + opt_force_view], 0
+    mov qword ptr [rip + opt_run_mode], 0
+    mov qword ptr [rip + run_argv_ptr], 0
+    mov qword ptr [rip + run_argc], 0
     mov qword ptr [rip + resolved_file_ptr], 0
     mov qword ptr [rip + line_ptr], 0
     mov qword ptr [rip + line_cap], 0

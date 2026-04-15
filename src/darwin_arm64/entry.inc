@@ -13,6 +13,10 @@ _main:
     mov w0, #1
     b 99f
 2:
+    adrp x8, opt_run_mode@PAGE
+    add x8, x8, opt_run_mode@PAGEOFF
+    ldr x8, [x8]
+    cbnz x8, 30f
     adrp x8, opt_force_view@PAGE
     add x8, x8, opt_force_view@PAGEOFF
     ldr x8, [x8]
@@ -23,6 +27,9 @@ _main:
 20:
     bl _view_logs
     b 4f
+30:
+    bl _run_command
+    b 99f
 3:
     bl _capture_logs
 4:
@@ -32,8 +39,8 @@ _main:
     ret
 
 _reset_state:
-    adrp x8, opt_type@PAGE
-    add x8, x8, opt_type@PAGEOFF
+    adrp x8, opt_source@PAGE
+    add x8, x8, opt_source@PAGEOFF
     str xzr, [x8]
     adrp x8, opt_tag@PAGE
     add x8, x8, opt_tag@PAGEOFF
@@ -46,6 +53,15 @@ _reset_state:
     str xzr, [x8]
     adrp x8, opt_force_view@PAGE
     add x8, x8, opt_force_view@PAGEOFF
+    str xzr, [x8]
+    adrp x8, opt_run_mode@PAGE
+    add x8, x8, opt_run_mode@PAGEOFF
+    str xzr, [x8]
+    adrp x8, run_argv_ptr@PAGE
+    add x8, x8, run_argv_ptr@PAGEOFF
+    str xzr, [x8]
+    adrp x8, run_argc@PAGE
+    add x8, x8, run_argc@PAGEOFF
     str xzr, [x8]
     adrp x8, resolved_file_ptr@PAGE
     add x8, x8, resolved_file_ptr@PAGEOFF

@@ -12,16 +12,22 @@ _parse_args:
     bge 9f
     ldr x0, [x20, x21, lsl #3]
 
-    adrp x1, str_type@PAGE
-    add x1, x1, str_type@PAGEOFF
+    adrp x1, str_source@PAGE
+    add x1, x1, str_source@PAGEOFF
+    bl _strcmp
+    cbz w0, 20f
+    ldr x0, [x20, x21, lsl #3]
+    adrp x1, str_source_short@PAGE
+    add x1, x1, str_source_short@PAGEOFF
     bl _strcmp
     cbnz w0, 2f
+20:
     add x22, x21, #1
     cmp x22, x19
     bge 90f
     ldr x8, [x20, x22, lsl #3]
-    adrp x9, opt_type@PAGE
-    add x9, x9, opt_type@PAGEOFF
+    adrp x9, opt_source@PAGE
+    add x9, x9, opt_source@PAGEOFF
     str x8, [x9]
     add x21, x21, #2
     b 1b
@@ -30,7 +36,13 @@ _parse_args:
     adrp x1, str_tag@PAGE
     add x1, x1, str_tag@PAGEOFF
     bl _strcmp
+    cbz w0, 21f
+    ldr x0, [x20, x21, lsl #3]
+    adrp x1, str_tag_short@PAGE
+    add x1, x1, str_tag_short@PAGEOFF
+    bl _strcmp
     cbnz w0, 3f
+21:
     add x22, x21, #1
     cmp x22, x19
     bge 90f
@@ -45,7 +57,13 @@ _parse_args:
     adrp x1, str_cmd@PAGE
     add x1, x1, str_cmd@PAGEOFF
     bl _strcmp
+    cbz w0, 22f
+    ldr x0, [x20, x21, lsl #3]
+    adrp x1, str_cmd_short@PAGE
+    add x1, x1, str_cmd_short@PAGEOFF
+    bl _strcmp
     cbnz w0, 4f
+22:
     add x22, x21, #1
     cmp x22, x19
     bge 90f
@@ -60,7 +78,13 @@ _parse_args:
     adrp x1, str_file@PAGE
     add x1, x1, str_file@PAGEOFF
     bl _strcmp
+    cbz w0, 23f
+    ldr x0, [x20, x21, lsl #3]
+    adrp x1, str_file_short@PAGE
+    add x1, x1, str_file_short@PAGEOFF
+    bl _strcmp
     cbnz w0, 5f
+23:
     add x22, x21, #1
     cmp x22, x19
     bge 90f
@@ -75,7 +99,13 @@ _parse_args:
     adrp x1, str_view@PAGE
     add x1, x1, str_view@PAGEOFF
     bl _strcmp
+    cbz w0, 24f
+    ldr x0, [x20, x21, lsl #3]
+    adrp x1, str_view_short@PAGE
+    add x1, x1, str_view_short@PAGEOFF
+    bl _strcmp
     cbnz w0, 6f
+24:
     adrp x8, opt_force_view@PAGE
     add x8, x8, opt_force_view@PAGEOFF
     mov x9, #1
@@ -87,12 +117,82 @@ _parse_args:
     adrp x1, str_help@PAGE
     add x1, x1, str_help@PAGEOFF
     bl _strcmp
-    cbnz w0, 91f
+    cbz w0, 25f
+    ldr x0, [x20, x21, lsl #3]
+    adrp x1, str_help_short@PAGE
+    add x1, x1, str_help_short@PAGEOFF
+    bl _strcmp
+    cbnz w0, 7f
+25:
     adrp x0, usage_text@PAGE
     add x0, x0, usage_text@PAGEOFF
     bl _puts
     mov w0, #1
     b 99f
+7:
+    ldr x0, [x20, x21, lsl #3]
+    adrp x1, str_run@PAGE
+    add x1, x1, str_run@PAGEOFF
+    bl _strcmp
+    cbnz w0, 8f
+    add x22, x21, #1
+    cmp x22, x19
+    bge 92f
+    ldr x0, [x20, x22, lsl #3]
+    adrp x1, str_double_dash@PAGE
+    add x1, x1, str_double_dash@PAGEOFF
+    bl _strcmp
+    cbnz w0, 92f
+    add x22, x21, #2
+    cmp x22, x19
+    bge 92f
+    adrp x8, opt_run_mode@PAGE
+    add x8, x8, opt_run_mode@PAGEOFF
+    mov x9, #1
+    str x9, [x8]
+    add x8, x20, x22, lsl #3
+    adrp x9, run_argv_ptr@PAGE
+    add x9, x9, run_argv_ptr@PAGEOFF
+    str x8, [x9]
+    sub x8, x19, x22
+    adrp x9, run_argc@PAGE
+    add x9, x9, run_argc@PAGEOFF
+    str x8, [x9]
+    adrp x8, opt_cmd@PAGE
+    add x8, x8, opt_cmd@PAGEOFF
+    ldr x0, [x8]
+    cbnz x0, 9f
+    bl _build_run_command_string
+    str x0, [x8]
+    b 9f
+8:
+    ldr x0, [x20, x21, lsl #3]
+    adrp x1, str_double_dash@PAGE
+    add x1, x1, str_double_dash@PAGEOFF
+    bl _strcmp
+    cbnz w0, 91f
+    add x22, x21, #1
+    cmp x22, x19
+    bge 92f
+    adrp x8, opt_run_mode@PAGE
+    add x8, x8, opt_run_mode@PAGEOFF
+    mov x9, #1
+    str x9, [x8]
+    add x8, x20, x22, lsl #3
+    adrp x9, run_argv_ptr@PAGE
+    add x9, x9, run_argv_ptr@PAGEOFF
+    str x8, [x9]
+    sub x8, x19, x22
+    adrp x9, run_argc@PAGE
+    add x9, x9, run_argc@PAGEOFF
+    str x8, [x9]
+    adrp x8, opt_cmd@PAGE
+    add x8, x8, opt_cmd@PAGEOFF
+    ldr x0, [x8]
+    cbnz x0, 9f
+    bl _build_run_command_string
+    str x0, [x8]
+    b 9f
 90:
     adrp x0, err_missing_arg@PAGE
     add x0, x0, err_missing_arg@PAGEOFF
@@ -102,6 +202,12 @@ _parse_args:
 91:
     adrp x0, err_unknown_arg@PAGE
     add x0, x0, err_unknown_arg@PAGEOFF
+    bl _puts
+    mov w0, #1
+    b 99f
+92:
+    adrp x0, err_missing_run_cmd@PAGE
+    add x0, x0, err_missing_run_cmd@PAGEOFF
     bl _puts
     mov w0, #1
     b 99f
